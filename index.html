@@ -2,12 +2,19 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zaman Kilitli Kasa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Kriptex</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,600;1,300&display=swap');
 
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  /* Thin scrollbars */
+  ::-webkit-scrollbar { width:4px; height:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--textDim); }
+  * { scrollbar-width:thin; scrollbar-color:var(--border2) transparent; }
 
   :root {
     --bg:#0a0a0f; --surface:#111118; --surface2:#18181f;
@@ -17,20 +24,55 @@
     --orange:#c97a4c; --orangeDim:#7a4a30;
     --text:#e8e6f0; --textMid:#9994b0; --textDim:#5a5570;
     --mono:'Space Mono',monospace; --serif:'Crimson Pro',Georgia,serif;
+    --radius: 2px;
+    --goldA06: rgba(201,168,76,.06);
+    --goldA08: rgba(201,168,76,.08);
+    --goldA10: rgba(201,168,76,.10);
+    --goldA15: rgba(201,168,76,.15);
+    --goldA18: rgba(201,168,76,.18);
+    --goldA58: rgba(201,168,76,.58);
+    --goldBg: var(--goldA06);
+    --goldBtn: rgba(201,168,76,.1);
+    --goldBtnHover: var(--goldA18);
+    --goldInfoBg: rgba(201,168,76,.04);
+    --greenA08: rgba(76,172,122,.08);
+    --greenBg: rgba(76,172,122,.1);
+    --greenBgHover: rgba(76,172,122,.18);
+    --ambientGold: rgba(201,168,76,.04);
+    --ambientViolet: rgba(80,60,180,.05);
+    --purpleBadge: rgba(90,85,112,.12);
+    --redBorderSoft: rgba(201,76,76,.5);
+  }
+
+  html, body {
+    height:100%; height:100dvh;
+    overflow:hidden;
   }
 
   body {
     background:var(--bg); color:var(--text); font-family:var(--mono);
-    min-height:100vh; display:flex; align-items:flex-start;
-    justify-content:center; padding:2rem 1rem; overflow-x:hidden;
+    display:flex; align-items:flex-start;
+    justify-content:center; overflow:hidden;
   }
   body::before {
     content:''; position:fixed; inset:0; pointer-events:none;
-    background:radial-gradient(ellipse 60% 40% at 20% 20%,rgba(201,168,76,.04) 0%,transparent 60%),
-               radial-gradient(ellipse 50% 60% at 80% 80%,rgba(80,60,180,.05) 0%,transparent 60%);
+    background:radial-gradient(ellipse 60% 40% at 20% 20%,var(--ambientGold) 0%,transparent 60%),
+               radial-gradient(ellipse 50% 60% at 80% 80%,var(--ambientViolet) 0%,transparent 60%);
   }
 
-  .wrap { width:100%; max-width:520px; padding-top:1rem; }
+  .wrap {
+    width:100%; max-width:520px;
+    height:100dvh; overflow:hidden;
+    padding:1.5rem 1rem 1.5rem;
+    display:flex; flex-direction:column;
+    box-sizing:border-box;
+  }
+
+  /* her ekran kendi içinde kaydırılabilir, dış wrap hiç taşmaz */
+  #scr-login, #scr-list, #scr-add, #scr-detail, #scr-changepw {
+    overflow-y:auto; overflow-x:hidden;
+    flex:1; min-height:0;
+  }
 
   .header { text-align:center; margin-bottom:2rem; }
   .header h1 { font-family:var(--serif); font-size:2rem; font-weight:300; font-style:italic; color:var(--gold); }
@@ -38,28 +80,28 @@
   .lock-icon { display:flex; align-items:center; justify-content:center; margin-bottom:.8rem; }
 
   .panel {
-    background:var(--surface); border:1px solid var(--border); border-radius:2px;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
     padding:1.75rem; position:relative; margin-bottom:1rem; overflow:hidden;
+    animation:panel-fadein 1.2s ease both;
+  }
+  @keyframes panel-fadein {
+    from { opacity:0; }
+    to   { opacity:1; }
   }
   .panel::before {
     content:''; position:absolute; inset:0; padding:1px; border-radius:inherit;
     pointer-events:none;
     background:
-      conic-gradient(from 0deg,
-        rgba(201,168,76,.03) 0deg,
-        rgba(201,168,76,.08) 90deg,
-        rgba(201,168,76,.03) 180deg,
-        rgba(201,168,76,.06) 270deg,
-        rgba(201,168,76,.03) 360deg),
-      conic-gradient(from 0deg,
-        rgba(201,168,76,0) 0deg 250deg,
-        rgba(201,168,76,.06) 268deg,
-        rgba(201,168,76,.18) 288deg,
-        rgba(201,168,76,.82) 314deg,
-        rgba(201,168,76,.36) 334deg,
-        rgba(201,168,76,.10) 348deg,
-        rgba(201,168,76,0) 360deg);
-    animation:panel-border-orbit 14s linear infinite;
+      linear-gradient(90deg,
+        transparent 0%,
+        var(--goldA10) 18%,
+        var(--goldA58) 50%,
+        var(--goldA10) 82%,
+        transparent 100%);
+    background-size:220% 100%;
+    background-position:-140% 0;
+    opacity:0;
+    animation:panel-border-scan 22s ease-in-out 3s infinite;
     -webkit-mask:
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
@@ -69,30 +111,32 @@
       linear-gradient(#fff 0 0);
     mask-composite:exclude;
   }
-  @keyframes panel-border-orbit{
-    from{transform:rotate(0deg)}
-    to{transform:rotate(360deg)}
+  @keyframes panel-border-scan {
+    0%   { background-position:-140% 0; opacity:0; }
+    15%  { opacity:1; }
+    85%  { opacity:1; }
+    100% { background-position:140% 0; opacity:0; }
   }
 
   .lbl { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--textDim); margin-bottom:7px; display:block; }
   .sp  { margin-top:1.25rem; }
 
   textarea {
-    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:2px;
-    color:var(--text); font-family:var(--mono); font-size:13px;
-    padding:11px; min-height:90px; resize:vertical; outline:none;
+    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius);
+    color:var(--text); font-size:13px;
+    padding:11px; min-height:90px; max-height:180px; resize:vertical; outline:none;
   }
   textarea:focus { border-color:var(--goldDim); }
 
   .inp-wrap { position:relative; }
   input[type=password],input[type=text] {
-    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:2px;
-    color:var(--text); font-family:var(--mono); font-size:13px;
+    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius);
+    color:var(--text); font-size:13px;
     padding:10px 40px 10px 12px; outline:none;
   }
   input[type=number] {
-    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:2px;
-    color:var(--text); font-family:var(--mono); font-size:15px; font-weight:700;
+    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius);
+    color:var(--text); font-size:15px; font-weight:700;
     padding:8px; text-align:center; outline:none;
     -moz-appearance:textfield; appearance:textfield;
   }
@@ -102,14 +146,18 @@
   .eye { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--textDim); cursor:pointer; padding:4px; line-height:1; }
   .eye:hover { color:var(--textMid); }
 
+  .seg-tab {
+    background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); color:var(--textDim);
+    font-size:10px; cursor:pointer;
+  }
+  .seg-tab.active { border-color:var(--gold); color:var(--gold); background:var(--goldBg); }
   .dur-tabs { display:flex; gap:6px; margin-bottom:10px; }
-  .dur-tab { background:var(--surface2); border:1px solid var(--border); border-radius:2px; color:var(--textDim); font-family:var(--mono); font-size:10px; padding:5px 10px; cursor:pointer; letter-spacing:.08em; }
-  .dur-tab.active { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,.06); }
+  .dur-tabs .seg-tab { padding:5px 10px; letter-spacing:.08em; }
 
   .presets { display:flex; gap:6px; flex-wrap:wrap; }
-  .preset-btn { background:transparent; border:1px solid var(--border); border-radius:2px; color:var(--textDim); font-family:var(--mono); font-size:10px; padding:5px 9px; cursor:pointer; letter-spacing:.06em; }
+  .preset-btn { background:transparent; border:1px solid var(--border); border-radius:var(--radius); color:var(--textDim); font-size:10px; padding:5px 9px; cursor:pointer; letter-spacing:.06em; }
   .preset-btn:hover { color:var(--gold); border-color:var(--goldDim); }
-  .preset-btn.sel { color:var(--gold); border-color:var(--gold); background:rgba(201,168,76,.06); }
+  .preset-btn.sel { color:var(--gold); border-color:var(--gold); background:var(--goldBg); }
 
   .dur-inputs { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
   .dur-field label { font-size:10px; color:var(--textDim); display:block; margin-bottom:4px; }
@@ -117,15 +165,14 @@
   .dur-summary span { color:var(--gold); }
 
   .cd-mode-tabs { display:flex; gap:6px; }
-  .cd-mode-tab { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:2px; color:var(--textDim); font-family:var(--mono); font-size:10px; padding:8px 6px; cursor:pointer; letter-spacing:.05em; text-align:center; line-height:1.5; }
-  .cd-mode-tab.active { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,.06); }
+  .cd-mode-tabs .seg-tab { flex:1; padding:8px 6px; letter-spacing:.05em; text-align:center; line-height:1.5; }
 
-  .btn { width:100%; padding:13px; border-radius:2px; font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; border:1px solid; transition:all .2s; }
-  .btn-gold   { background:rgba(201,168,76,.1);  border-color:var(--gold);  color:var(--gold); }
-  .btn-gold:hover   { background:rgba(201,168,76,.18); }
+  .btn { width:100%; padding:13px; border-radius:var(--radius); font-size:12px; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; border:1px solid; transition:all .2s; }
+  .btn-gold   { background:var(--goldBtn);  border-color:var(--gold);  color:var(--gold); }
+  .btn-gold:hover   { background:var(--goldBtnHover); }
   .btn-gold:disabled   { opacity:.3; cursor:not-allowed; }
-  .btn-green  { background:rgba(76,172,122,.1); border-color:var(--green); color:var(--green); }
-  .btn-green:hover  { background:rgba(76,172,122,.18); }
+  .btn-green  { background:var(--greenBg); border-color:var(--green); color:var(--green); }
+  .btn-green:hover  { background:var(--greenBgHover); }
   .btn-green:disabled  { opacity:.3; cursor:not-allowed; }
   .btn-ghost  { background:transparent; border-color:var(--border2); color:var(--textDim); font-size:11px; margin-top:8px; }
   .btn-ghost:hover  { color:var(--textMid); }
@@ -144,15 +191,15 @@
   .info-row { display:flex; justify-content:space-between; font-size:10px; color:var(--textDim); margin-bottom:1.25rem; line-height:1.8; }
   .info-row .val { color:var(--textMid); }
 
-  .badge { display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:.15em; text-transform:uppercase; padding:4px 10px; border-radius:2px; margin-bottom:1.25rem; }
-  .badge-lock    { background:rgba(201,168,76,.08); color:var(--goldDim); border:1px solid var(--goldDim); }
-  .badge-open    { background:rgba(76,172,122,.08); color:var(--green);   border:1px solid var(--greenDim); }
-  .badge-waiting { background:rgba(90,85,112,.12);  color:var(--textMid); border:1px solid var(--border2); }
+  .badge { display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:.15em; text-transform:uppercase; padding:4px 10px; border-radius:var(--radius); margin-bottom:1.25rem; }
+  .badge-lock    { background:var(--goldA08); color:var(--goldDim); border:1px solid var(--goldDim); }
+  .badge-open    { background:var(--greenA08); color:var(--green); border:1px solid var(--greenDim); }
+  .badge-waiting { background:var(--purpleBadge); color:var(--textMid); border:1px solid var(--border2); }
   .dot { width:5px; height:5px; border-radius:50%; background:currentColor; animation:pulse 2s infinite; }
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-  .reveal-box { background:var(--surface2); border:1px solid var(--border2); border-radius:2px; padding:1rem; font-size:14px; line-height:1.7; word-break:break-all; margin:1rem 0; position:relative; white-space:pre-wrap; }
-  .copy-btn { position:absolute; top:8px; right:8px; background:none; border:1px solid var(--border2); border-radius:2px; color:var(--textDim); font-family:var(--mono); font-size:10px; padding:3px 8px; cursor:pointer; }
+  .reveal-box { background:var(--surface2); border:1px solid var(--border2); border-radius:var(--radius); padding:1rem; font-size:14px; line-height:1.7; word-break:break-all; margin:1rem 0; position:relative; white-space:pre-wrap; }
+  .copy-btn { position:absolute; top:8px; right:8px; background:none; border:1px solid var(--border2); border-radius:var(--radius); color:var(--textDim); font-size:10px; padding:3px 8px; cursor:pointer; }
   .copy-btn:hover { color:var(--gold); border-color:var(--goldDim); }
 
   /* two-step (minimal) */
@@ -163,46 +210,18 @@
   #twofa-input-wrap .btn { padding:9px 10px; }
   #twofa-input-wrap .err { margin:0; min-height:0; }
 
-  .info-box { background:rgba(201,168,76,.04); border:1px solid rgba(201,168,76,.15); border-radius:2px; padding:.75rem 1rem; font-size:11px; color:var(--textMid); line-height:1.6; margin-top:1rem; }
+  .info-box { background:var(--goldInfoBg); border:1px solid var(--goldA15); border-radius:var(--radius); padding:.75rem 1rem; font-size:11px; color:var(--textMid); line-height:1.6; margin-top:1rem; }
   .ib-title { color:var(--gold); font-size:10px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
 
   .spinner { display:inline-block; width:11px; height:11px; border:1px solid var(--border2); border-top-color:var(--gold); border-radius:50%; animation:spin .8s linear infinite; vertical-align:middle; margin-right:6px; }
   @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* ── Panel (sade çerçeve) ── */
-  .panel {
-    background:var(--surface); border:1px solid var(--border); border-radius:2px;
-    padding:1.75rem; position:relative; margin-bottom:1rem; overflow:hidden;
-  }
-  .panel::before {
-    content:''; position:absolute; inset:0; padding:1px; border-radius:inherit;
-    pointer-events:none;
-    background:
-      linear-gradient(90deg,
-        transparent 0%,
-        rgba(201,168,76,.10) 18%,
-        rgba(201,168,76,.58) 50%,
-        rgba(201,168,76,.10) 82%,
-        transparent 100%);
-    background-size:220% 100%;
-    background-position:-140% 0;
-    animation:panel-border-scan 6.5s linear infinite;
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor;
-    mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    mask-composite:exclude;
-  }
 
   .hidden { display:none!important; }
 
   /* ── İki adımlı şifreleme ── */
   .twofa-toggle { display:flex; align-items:flex-start; gap:10px; cursor:pointer; user-select:none; }
   .twofa-check {
-    width:18px; height:18px; border:1px solid var(--border2); border-radius:2px;
+    width:18px; height:18px; border:1px solid var(--border2); border-radius:var(--radius);
     background:var(--surface2); flex-shrink:0; display:flex; align-items:center; justify-content:center;
     transition:all .15s; margin-top:2px;
   }
@@ -217,7 +236,7 @@
   .item-list  { display:flex; flex-direction:column; gap:8px; }
   .empty-msg  { text-align:center; padding:2rem 0; font-size:11px; color:var(--textDim); line-height:2.2; }
 
-  .item-card  { background:var(--surface2); border:1px solid var(--border); border-radius:2px; padding:12px 14px; cursor:pointer; transition:border-color .15s; display:flex; align-items:center; gap:12px; }
+  .item-card  { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; cursor:pointer; transition:border-color .15s; display:flex; align-items:center; gap:12px; }
   .item-card:hover { border-color:var(--border2); }
 
   .i-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
@@ -246,19 +265,21 @@
 
   /* Görsel ekleme / gösterim */
   .add-content-tabs { display:flex; gap:6px; margin-bottom:10px; }
-  .add-content-tabs .cd-mode-tab { flex:1; }
-  .img-hint { font-size:10px; color:var(--textDim); margin-top:8px; line-height:1.55; }
+  .add-content-tabs .seg-tab { flex:1; }
+  .img-hint { font-size:10px; color:var(--textDim); margin-top:6px; line-height:1.5; display:none; }
+  .img-hint-toggle { font-size:10px; color:var(--textDim); margin-top:6px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; text-decoration-style:dotted; display:inline-block; }
+  .img-hint-toggle:hover { color:var(--textMid); }
   #a-img-input { margin-top:8px; font-size:11px; color:var(--textMid); max-width:100%; }
-  .img-prev-list { display:flex; flex-direction:column; gap:10px; margin-top:12px; max-height:300px; overflow-y:auto; }
-  .img-prev-row { display:flex; gap:10px; align-items:center; background:var(--surface2); border:1px solid var(--border); padding:8px; border-radius:2px; }
-  .img-prev-row img { width:56px; height:56px; object-fit:cover; border-radius:2px; flex-shrink:0; }
+  .img-prev-list { display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+  .img-prev-row { display:flex; gap:8px; align-items:center; background:var(--surface2); border:1px solid var(--border); padding:5px 8px; border-radius:var(--radius); }
+  .img-prev-row img { width:32px; height:32px; object-fit:cover; border-radius:var(--radius); flex-shrink:0; }
   .img-prev-meta { flex:1; min-width:0; font-size:10px; color:var(--textMid); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .img-prev-rm { flex-shrink:0; background:none; border:1px solid var(--border2); color:var(--textDim); font-family:var(--mono); font-size:10px; padding:4px 8px; cursor:pointer; border-radius:2px; }
-  .img-prev-rm:hover { color:var(--red); border-color:rgba(201,76,76,.5); }
+  .img-prev-rm { flex-shrink:0; background:none; border:none; color:var(--textDim); font-size:14px; line-height:1; padding:2px 4px; cursor:pointer; border-radius:var(--radius); }
+  .img-prev-rm:hover { color:var(--red); }
   .reveal-images-wrap { white-space:normal; word-break:normal; }
   .reveal-images-wrap .copy-btn { display:none!important; }
   .reveal-img-note { font-size:11px; color:var(--textMid); margin-bottom:12px; line-height:1.5; }
-  .reveal-img-card { border:1px solid var(--border2); border-radius:2px; overflow:hidden; margin-bottom:12px; background:var(--surface); }
+  .reveal-img-card { border:1px solid var(--border2); border-radius:var(--radius); overflow:hidden; margin-bottom:12px; background:var(--surface); }
   .reveal-img-cap { font-size:10px; padding:8px 10px; color:var(--textDim); border-bottom:1px solid var(--border); }
   .reveal-img-card img { max-width:100%; height:auto; display:block; }
   .reveal-img-actions { padding:8px 10px; }
@@ -266,7 +287,7 @@
   .reveal-dl:hover { text-decoration:underline; }
   .i-kind { color:var(--orangeDim); margin-right:6px; }
 
-  .footer { text-align:center; font-size:10px; color:var(--textDim); margin-top:.5rem; padding-bottom:2rem; }
+  .footer { text-align:center; font-size:10px; color:var(--textDim); margin-top:auto; padding:1rem 0 .5rem; }
   .footer a { color:var(--goldDim); text-decoration:none; }
   .footer a:hover { color:var(--gold); }
 </style>
@@ -283,8 +304,8 @@
         <line x1="24" y1="36" x2="24" y2="40" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="square"/>
       </svg>
     </div>
-    <h1>Zaman Kilitli Kasa</h1>
-    <p>Drand ağı &mdash; manipüle edilemez</p>
+    <h1>Kriptex</h1>
+    <p>Zaman kilitli şifreleme &#8212; manipüle edilemez</p>
   </div>
 
   <!-- ══ SCREEN: login ══ -->
@@ -371,8 +392,8 @@
       <div class="sp">
         <label class="lbl">İçerik türü</label>
         <div class="cd-mode-tabs add-content-tabs">
-          <button type="button" class="cd-mode-tab active" id="add-tab-text" onclick="setAddContentTab('text')">Metin</button>
-          <button type="button" class="cd-mode-tab" id="add-tab-img" onclick="setAddContentTab('image')">Görsel</button>
+          <button type="button" class="seg-tab active" id="add-tab-text" onclick="setAddContentTab('text')">Metin</button>
+          <button type="button" class="seg-tab" id="add-tab-img" onclick="setAddContentTab('image')">Görsel</button>
         </div>
       </div>
 
@@ -384,15 +405,16 @@
       <div class="sp hidden" id="add-image-wrap">
         <label class="lbl">Görsel dosyalar</label>
         <input type="file" id="a-img-input" accept="image/*" multiple onchange="onAddImagesInput(event)">
-        <p class="img-hint">Birden fazla görsel seçebilirsiniz. Aynı akış geçerlidir: süre, isteğe bağlı iki adımlı kod, drand zaman kilidi. Tek seferde en fazla 20 dosya, toplam ham boyut en fazla ~20 MB (tek kasa öğesi; iki adımlı modda tek erişim kodu).</p>
+        <span class="img-hint-toggle" onclick="var h=this.nextElementSibling;h.style.display=h.style.display==='block'?'none':'block';this.textContent=h.style.display==='block'?'bilgi ↑':'bilgi ↓'">bilgi ↓</span>
+        <p class="img-hint">En fazla 20 dosya, toplam ~20 MB. iPhone HEIC otomatik JPEG’e çevrilir. Tüm görseller tek öğe olarak kilitleniyor.</p>
         <div id="img-prev-list" class="img-prev-list"></div>
       </div>
 
       <div class="sp">
         <label class="lbl">Kilit Süresi</label>
         <div class="dur-tabs">
-          <button class="dur-tab active" id="dtab-quick" onclick="setDurTab('quick')">Hızlı seç</button>
-          <button class="dur-tab" id="dtab-custom" onclick="setDurTab('custom')">Özel gir</button>
+          <button type="button" class="seg-tab active" id="dtab-quick" onclick="setDurTab('quick')">Hızlı seç</button>
+          <button type="button" class="seg-tab" id="dtab-custom" onclick="setDurTab('custom')">Özel gir</button>
         </div>
         <div id="dur-quick">
           <div class="presets" id="presets-wrap">
@@ -461,8 +483,8 @@
       </div>
       <label class="lbl">Erişim Kodu</label>
       <div style="position:relative;">
-        <div id="modal-code" style="background:var(--surface2);border:1px solid var(--border2);border-radius:2px;padding:12px 48px 12px 14px;font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--gold);word-break:break-all;"></div>
-        <button onclick="copyModalCode()" id="modal-copy-btn" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:1px solid var(--border2);border-radius:2px;color:var(--textDim);font-family:var(--mono);font-size:10px;padding:3px 8px;cursor:pointer;">Kopyala</button>
+        <div id="modal-code" style="background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 48px 12px 14px;font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--gold);word-break:break-all;"></div>
+        <button onclick="copyModalCode()" id="modal-copy-btn" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:1px solid var(--border2);border-radius:var(--radius);color:var(--textDim);font-size:10px;padding:3px 8px;cursor:pointer;">Kopyala</button>
       </div>
       <div class="info-box" style="margin-top:.75rem;margin-bottom:1.25rem;">
         <div class="ib-title">Nasıl çalışır?</div>
@@ -629,6 +651,7 @@ const IDB_NAME = 'zkasa_idb';
 const IDB_VER = 1;
 const IDB_STORE = 'vault';
 const IDB_KEY = 'payload';
+const IDB_KEY_BRUTE = 'brute_login';
 
 let idbDbPromise = null;
 function openIdb() {
@@ -663,6 +686,26 @@ async function idbSetPayload(jsonStr) {
     tx.onerror = () => reject(tx.error);
     tx.onabort = () => reject(tx.error || new Error('IDB transaction aborted'));
     tx.objectStore(IDB_STORE).put(jsonStr, IDB_KEY);
+  });
+}
+
+async function idbGetKv(key) {
+  const db = await openIdb();
+  return new Promise((resolve, reject) => {
+    const rq = db.transaction(IDB_STORE, 'readonly').objectStore(IDB_STORE).get(key);
+    rq.onsuccess = () => resolve(rq.result != null ? rq.result : null);
+    rq.onerror = () => reject(rq.error);
+  });
+}
+
+async function idbSetKv(key, val) {
+  const db = await openIdb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error || new Error('IDB transaction aborted'));
+    tx.objectStore(IDB_STORE).put(val, key);
   });
 }
 
@@ -744,9 +787,107 @@ function fileToBase64(file) {
   });
 }
 
+/** Ham bayt uzunluğunun data URL içindeki base64 parçasının dizgi uzunluğu (MIME base64 çıktısı) */
+function base64EncodedLength(bytes) {
+  if (!bytes || bytes <= 0) return 0;
+  return Math.ceil(bytes / 3) * 4;
+}
+
+const HEIC2ANY_SRC = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
+let heic2anyLoader = null;
+
+function isHeicLike(file) {
+  const t = (file.type || '').toLowerCase();
+  if (t === 'image/heic' || t === 'image/heif') return true;
+  return /\.hei[cf]$/i.test(file.name || '');
+}
+
+function acceptsRasterImage(file) {
+  if (file.type && file.type.startsWith('image/')) return true;
+  return isHeicLike(file);
+}
+
+async function loadHeic2any() {
+  if (typeof window.heic2any === 'function') return window.heic2any;
+  if (!heic2anyLoader) {
+    heic2anyLoader = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = HEIC2ANY_SRC;
+      s.async = true;
+      s.onload = () =>
+        typeof window.heic2any === 'function'
+          ? resolve(window.heic2any)
+          : reject(new Error('heic2any kullanılamadı'));
+      s.onerror = () => reject(new Error('HEIC çevirici yüklenemedi'));
+      document.head.appendChild(s);
+    });
+  }
+  return heic2anyLoader;
+}
+
+const MAX_CANVAS_EDGE = 8192;
+
+function bitmapToJpegBlob(bmp, quality = 0.92) {
+  let w = bmp.width;
+  let h = bmp.height;
+  const maxEdge = Math.max(w, h);
+  const scale = maxEdge > MAX_CANVAS_EDGE ? MAX_CANVAS_EDGE / maxEdge : 1;
+  if (scale < 1) {
+    w = Math.round(w * scale);
+    h = Math.round(h * scale);
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(bmp, 0, 0, w, h);
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => {
+      if (blob) resolve(blob);
+      else reject(new Error('JPEG oluşturulamadı'));
+    }, 'image/jpeg', quality);
+  });
+}
+
+async function bitmapFromHeicViaCanvas(file) {
+  let bmp;
+  try {
+    bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  } catch (_) {
+    bmp = await createImageBitmap(file);
+  }
+  try {
+    return await bitmapToJpegBlob(bmp);
+  } finally {
+    bmp.close?.();
+  }
+}
+
+/** HEIC/HEIF → JPEG (önce yerel decode + canvas; olmazsa heic2any wasm) — önizleme ile uyumlu */
+async function heicOrImageToJpegFile(file) {
+  if (!isHeicLike(file)) return file;
+  const baseName = String(file.name || 'foto').replace(/\.(hei[cf]|heif)$/i, '');
+  try {
+    const blob = await bitmapFromHeicViaCanvas(file);
+    return new File([blob], `${baseName}.jpg`, {
+      type: 'image/jpeg',
+      lastModified: Date.now()
+    });
+  } catch (_) {
+    const heic2any = await loadHeic2any();
+    const out = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
+    const jpegBlob = Array.isArray(out) ? out[0] : out;
+    if (!(jpegBlob instanceof Blob)) throw new Error('HEIC dönüşümü beklenmedik çıktı');
+    return new File([jpegBlob], `${baseName}.jpg`, {
+      type: 'image/jpeg',
+      lastModified: Date.now()
+    });
+  }
+}
+
 /** Görsel ekleme: tek öğede çoklu görsel (tek tlock / tek iki adımlı kod); makul bellek sınırı */
 const MAX_IMAGE_FILES = 20;
-const MAX_IMAGE_TOTAL_BYTES = 20 * 1024 * 1024; // 20 MiB toplam (ham dosya)
+const MAX_IMAGE_TOTAL_BYTES = 20 * 1024 * 1024; // 20 MiB üst sınır: kodlanmış base64 toplam uzunluğu (fileToBase64 çıktısı)
 const MAX_IMAGE_TOTAL_LABEL = '~20 MB';
 
 async function deriveKey(pw, salt) {
@@ -782,7 +923,7 @@ async function aesDec(obj, pw) {
 }
 async function verifyPw(pw) {
   if (!DB.masterHash) return false;
-  try { return (await aesDec(DB.masterHash, pw)) === 'ZKASA_OK'; }
+  try { return (await aesDec(DB.masterHash, pw)) === 'ZKRIPTEX_OK'; }
   catch { return false; }
 }
 
@@ -790,16 +931,41 @@ async function verifyPw(pw) {
 function timeToRound(ms) { return Math.ceil((ms - CHAIN_GENESIS) / CHAIN_PERIOD); }
 function roundToTime(r)  { return CHAIN_GENESIS + r * CHAIN_PERIOD; }
 
-// ── Brute-force koruması ──────────────────────
+// ── Brute-force koruması (IndexedDB; sayfa yenilemede korunur) ──
 let failCount = 0;
 let failLockUntil = 0;
+
+async function loadBruteState() {
+  try {
+    await openIdb();
+    const raw = await idbGetKv(IDB_KEY_BRUTE);
+    if (raw && typeof raw === 'object') {
+      failCount = Math.max(0, Number(raw.failCount) | 0);
+      failLockUntil = Math.max(0, Number(raw.failLockUntil) | 0);
+    }
+  } catch (e) {
+    console.warn('Brute koruma durumu okunamadı:', e);
+  }
+}
+
+async function persistBruteState() {
+  try {
+    await idbSetKv(IDB_KEY_BRUTE, { failCount, failLockUntil });
+  } catch (e) {
+    console.warn('Brute koruma durumu kaydedilemedi:', e);
+  }
+}
 
 async function waitBruteForce() {
   if (failCount < 3) return;
   const delay = Math.min(Math.pow(2, failCount - 2) * 1000, 30000);
-  failLockUntil = Date.now() + delay;
+  const now = Date.now();
+  if (failLockUntil <= now) {
+    failLockUntil = now + delay;
+    await persistBruteState();
+  }
   const errEl = $('login-err');
-  const btn   = $('login-btn');
+  const btn = $('login-btn');
   btn.disabled = true;
   while (Date.now() < failLockUntil) {
     const left = Math.ceil((failLockUntil - Date.now()) / 1000);
@@ -837,17 +1003,22 @@ async function doLogin() {
   try {
     if (!DB.masterHash) {
       if (pw !== pw2) { err.textContent = 'Parolalar eşleşmiyor.'; return; }
-      DB.masterHash = await aesEnc('ZKASA_OK', pw);
+      DB.masterHash = await aesEnc('ZKRIPTEX_OK', pw);
       failCount = 0;
+      failLockUntil = 0;
+      await persistBruteState();
       save();
     } else {
       const ok = await verifyPw(pw);
       if (!ok) {
         failCount++;
+        await persistBruteState();
         err.textContent = `Hatalı parola.${failCount >= 3 ? ' (Deneme: ' + failCount + ')' : ''}`;
         return;
       }
       failCount = 0;
+      failLockUntil = 0;
+      await persistBruteState();
     }
     SESSION_PW = pw;
     showList();
@@ -1012,7 +1183,7 @@ function renderImagePreviewList() {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'img-prev-rm';
-    btn.textContent = 'Çıkar';
+    btn.textContent = '×';
     btn.onclick = () => removeAddImageRow(row.id);
     div.appendChild(img);
     div.appendChild(meta);
@@ -1030,29 +1201,38 @@ function removeAddImageRow(id) {
   renderImagePreviewList();
 }
 
-function onAddImagesInput(ev) {
+async function onAddImagesInput(ev) {
   const errEl = $('a-err');
   errEl.textContent = '';
   const files = Array.from(ev.target.files || []);
   ev.target.value = '';
-  let sum = addImageQueue.reduce((s, r) => s + r.file.size, 0);
+  let sum = addImageQueue.reduce((s, r) => s + base64EncodedLength(r.file.size), 0);
   for (const file of files) {
-    if (!file.type.startsWith('image/')) {
+    if (!acceptsRasterImage(file)) {
       errEl.textContent = 'Yalnızca görsel dosyaları: ' + file.name;
       continue;
+    }
+    let usable = file;
+    if (isHeicLike(file)) {
+      try {
+        usable = await heicOrImageToJpegFile(file);
+      } catch (e) {
+        errEl.textContent = `HEIC dönüşümü başarısız (${file.name}). ${e && e.message ? e.message : ''}`.trim();
+        continue;
+      }
     }
     if (addImageQueue.length >= MAX_IMAGE_FILES) {
       errEl.textContent = `En fazla ${MAX_IMAGE_FILES} dosya eklenebilir.`;
       break;
     }
-    if (sum + file.size > MAX_IMAGE_TOTAL_BYTES) {
+    if (sum + base64EncodedLength(usable.size) > MAX_IMAGE_TOTAL_BYTES) {
       errEl.textContent = `Toplam boyut sınırı aşıldı (${MAX_IMAGE_TOTAL_LABEL}). Bazı dosyalar eklenmedi.`;
       break;
     }
-    sum += file.size;
+    sum += base64EncodedLength(usable.size);
     addImageQueue.push({
       id: 'img' + Date.now() + Math.random().toString(36).slice(2, 8),
-      file
+      file: usable
     });
   }
   renderImagePreviewList();
@@ -1062,13 +1242,14 @@ async function buildImagePayloadFromQueue() {
   const items = [];
   let total = 0;
   for (const row of addImageQueue) {
-    total += row.file.size || 0;
-    if (total > MAX_IMAGE_TOTAL_BYTES) throw new Error(`Toplam görsel boyutu çok büyük (en fazla ${MAX_IMAGE_TOTAL_LABEL}).`);
     const mime = row.file.type || ( /\.jpe?g$/i.test(row.file.name) ? 'image/jpeg' : 'image/png');
+    const data = await fileToBase64(row.file);
+    total += data.length;
+    if (total > MAX_IMAGE_TOTAL_BYTES) throw new Error(`Toplam görsel boyutu çok büyük (en fazla ${MAX_IMAGE_TOTAL_LABEL}).`);
     items.push({
       name: row.file.name || ('görsel_' + (items.length + 1)),
       mime,
-      data: await fileToBase64(row.file)
+      data
     });
   }
   return JSON.stringify({ __kasaImages: 'v1', items });
@@ -1262,7 +1443,7 @@ async function doAddItem() {
 
     item.encName = await aesEnc(name, SESSION_PW);
     item.name = name;
-    item.masterEncName = await aesEnc('ZKASA_OK_' + id, SESSION_PW);
+    item.masterEncName = await aesEnc('ZKRIPTEX_OK_' + id, SESSION_PW);
 
     const unlockTs    = Date.now() + addSecs * 1000;
     item.targetRound  = timeToRound(unlockTs);
@@ -1655,7 +1836,7 @@ async function doChangePw() {
         item.name = nm; // bellekte güncelle
       }
     }
-    DB.masterHash = await aesEnc('ZKASA_OK', newPw);
+    DB.masterHash = await aesEnc('ZKRIPTEX_OK', newPw);
     SESSION_PW    = newPw;
     save();
     alert('Parola başarıyla güncellendi.');
@@ -1681,7 +1862,7 @@ async function exportData() {
   }
   const url = URL.createObjectURL(blob);
   const a   = document.createElement('a');
-  a.href = url; a.download = 'kasa_yedek_' + new Date().toISOString().slice(0,10) + '.json';
+  a.href = url; a.download = 'kriptex_yedek_' + new Date().toISOString().slice(0,10) + '.json';
   a.click(); URL.revokeObjectURL(url);
 }
 
@@ -1768,6 +1949,7 @@ async function init() {
     alert('Kasa verisi yüklenemedi: ' + (e.message || String(e)));
   }
   SESSION_PW = null;
+  await loadBruteState();
   // Tarayıcı geri/yeni yükleme durumlarında spinner'lar takılı kalmasın.
   resetBusyButtons();
   showLogin();
