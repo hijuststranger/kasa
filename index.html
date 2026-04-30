@@ -305,7 +305,7 @@
       </svg>
     </div>
     <h1>Kriptex</h1>
-    <p>Zaman kilitli şifreleme &#8212; manipüle edilemez</p>
+    <p>Drand ağı &mdash; manipüle edilemez</p>
   </div>
 
   <!-- ══ SCREEN: login ══ -->
@@ -923,7 +923,7 @@ async function aesDec(obj, pw) {
 }
 async function verifyPw(pw) {
   if (!DB.masterHash) return false;
-  try { return (await aesDec(DB.masterHash, pw)) === 'ZKRIPTEX_OK'; }
+  try { return (await aesDec(DB.masterHash, pw)) === 'ZKASA_OK'; }
   catch { return false; }
 }
 
@@ -1003,7 +1003,7 @@ async function doLogin() {
   try {
     if (!DB.masterHash) {
       if (pw !== pw2) { err.textContent = 'Parolalar eşleşmiyor.'; return; }
-      DB.masterHash = await aesEnc('ZKRIPTEX_OK', pw);
+      DB.masterHash = await aesEnc('ZKASA_OK', pw);
       failCount = 0;
       failLockUntil = 0;
       await persistBruteState();
@@ -1443,7 +1443,7 @@ async function doAddItem() {
 
     item.encName = await aesEnc(name, SESSION_PW);
     item.name = name;
-    item.masterEncName = await aesEnc('ZKRIPTEX_OK_' + id, SESSION_PW);
+    item.masterEncName = await aesEnc('ZKASA_OK_' + id, SESSION_PW);
 
     const unlockTs    = Date.now() + addSecs * 1000;
     item.targetRound  = timeToRound(unlockTs);
@@ -1836,7 +1836,7 @@ async function doChangePw() {
         item.name = nm; // bellekte güncelle
       }
     }
-    DB.masterHash = await aesEnc('ZKRIPTEX_OK', newPw);
+    DB.masterHash = await aesEnc('ZKASA_OK', newPw);
     SESSION_PW    = newPw;
     save();
     alert('Parola başarıyla güncellendi.');
@@ -1862,7 +1862,7 @@ async function exportData() {
   }
   const url = URL.createObjectURL(blob);
   const a   = document.createElement('a');
-  a.href = url; a.download = 'kriptex_yedek_' + new Date().toISOString().slice(0,10) + '.json';
+  a.href = url; a.download = 'kasa_yedek_' + new Date().toISOString().slice(0,10) + '.json';
   a.click(); URL.revokeObjectURL(url);
 }
 
